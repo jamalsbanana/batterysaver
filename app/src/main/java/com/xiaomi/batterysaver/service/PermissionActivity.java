@@ -3,7 +3,6 @@ package com.xiaomi.batterysaver.service;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -20,24 +19,29 @@ public class PermissionActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // No UI is set for this activity as its main purpose is to request permissions
         requestPermissions();
     }
 
     private void requestPermissions() {
         if (!hasAllPermissions()) {
+            // Request the missing permissions
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
         } else {
-            // All permissions are already granted
+            // All permissions are already granted, proceed to the next activity
             proceedToNextActivity();
         }
     }
 
     private boolean hasAllPermissions() {
+        // Check each required permission
         for (String permission : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                // Return false if any permission is not granted
                 return false;
             }
         }
+        // All permissions are granted
         return true;
     }
 
@@ -53,18 +57,20 @@ public class PermissionActivity extends Activity {
                         return;
                     }
                 }
-                // All permissions have been granted
+                // All permissions have been granted, proceed to the next activity
                 proceedToNextActivity();
             } else {
+                // Permission request was cancelled, finish the activity
                 finish();
             }
         }
     }
 
     private void proceedToNextActivity() {
-        // Intent to start your next activity
+        // Replace 'YourNextActivity.class' with the actual class you want to start
         Intent nextActivityIntent = new Intent(this, YourNextActivity.class);
         startActivity(nextActivityIntent);
+        // Finish this activity so it's removed from the back stack
         finish();
     }
 }

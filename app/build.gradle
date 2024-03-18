@@ -27,10 +27,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    // If using Java 8 language features (such as lambda expressions), enable the following options
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+
 }
 
 dependencies {
