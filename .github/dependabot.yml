@@ -1,21 +1,8 @@
 version: 2
 updates:
-  # Update Gradle dependencies located in the root project directory
+  # Update Gradle dependencies located in the root project directory, including the Gradle Wrapper
   - package-ecosystem: "gradle"
     directory: "/" # Root directory of the project
     schedule:
       interval: "weekly" # Dependabot will check for updates weekly
-    # Optional: Open pull requests for both security updates and version updates
     open-pull-requests-limit: 10
-
-  # If you have other modules or specific directories with their own build.gradle files,
-  # you can add more entries here similar to the one above, specifying the correct path
-  # in the 'directory' field.
-
-  # Update Gradle Wrapper to ensure using the latest Gradle distribution
-  - package-ecosystem: "gradle-wrapper"
-    directory: "/" # Root directory where gradle-wrapper.properties is located
-    schedule:
-      interval: "monthly" # Less frequent checks for Gradle Wrapper updates
-    # Optional: Limit the number of open pull requests for Gradle Wrapper updates
-    open-pull-requests-limit: 2
