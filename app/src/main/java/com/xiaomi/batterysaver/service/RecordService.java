@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import android.content.pm.PackageManager;
 
 import java.io.IOException;
 
@@ -49,42 +50,30 @@ public class RecordService extends Service {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mediaRecorder.setOutputFile(getExternalFilesDir(null).getAbsolutePath() + "/audio_record_" + System.currentTimeMillis() + ".mp4");
     }
 
     private void startRecording() {
-        audioFileUri = createAudioFileUri();
-        if (audioFileUri != null) {
-            mediaRecorder.setOutputFile(getContentResolver().openFileDescriptor(audioFileUri, "w").getFileDescriptor());
-            try {
-                mediaRecorder.prepare();
-                mediaRecorder.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     private void stopRecording() {
         if (mediaRecorder != null) {
-            mediaRecorder.stop();
-            mediaRecorder.release();
-            mediaRecorder = null;
+            try {
+                mediaRecorder.stop();
+                mediaRecorder.release();
+            } catch (RuntimeException stopException) {
+                // Handle the case where stop is called immediately after start causing an exception
+                stopException.printStackTrace();
+            } finally {
+                mediaRecorder = null;
+            }
         }
-    }
-
-    private Uri createAudioFileUri() {
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Audio.Media.DISPLAY_NAME, "audio_record_" + System.currentTimeMillis() + ".mp4");
-        values.put(MediaStore.Audio.Media.RELATIVE_PATH, "Music/BatterySaver/");
-        values.put(MediaStore.Audio.Media.IS_PENDING, 1);
-
-        Uri uri = getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
-        if (uri != null) {
-            ContentValues updateValues = new ContentValues();
-            updateValues.put(MediaStore.Audio.Media.IS_PENDING, 0);
-            getContentResolver().update(uri, updateValues, null, null);
-        }
-        return uri;
     }
 
     private boolean hasPermissions() {

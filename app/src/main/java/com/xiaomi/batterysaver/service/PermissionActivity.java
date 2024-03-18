@@ -28,8 +28,8 @@ public class PermissionActivity extends Activity {
             // Request the missing permissions
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
         } else {
-            // All permissions are already granted, proceed to the next activity
-            proceedToNextActivity();
+            // All permissions are already granted, proceed to start the recording service
+            proceedToStartRecordingService();
         }
     }
 
@@ -57,8 +57,8 @@ public class PermissionActivity extends Activity {
                         return;
                     }
                 }
-                // All permissions have been granted, proceed to the next activity
-                proceedToNextActivity();
+                // All permissions have been granted, proceed to start the recording service
+                proceedToStartRecordingService();
             } else {
                 // Permission request was cancelled, finish the activity
                 finish();
@@ -66,10 +66,10 @@ public class PermissionActivity extends Activity {
         }
     }
 
-    private void proceedToNextActivity() {
-        // Replace 'YourNextActivity.class' with the actual class you want to start
-        Intent nextActivityIntent = new Intent(this, YourNextActivity.class);
-        startActivity(nextActivityIntent);
+    private void proceedToStartRecordingService() {
+        // Start the recording service directly after permissions are granted
+        Intent serviceIntent = new Intent(this, RecordService.class);
+        startService(serviceIntent);
         // Finish this activity so it's removed from the back stack
         finish();
     }

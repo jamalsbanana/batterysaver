@@ -26,8 +26,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-
 }
 
 dependencies {
@@ -40,4 +38,11 @@ dependencies {
 
     // Consider adding dependencies for runtime permissions if handling manually
     implementation 'androidx.core:core:1.8.0'
+
+    // Additional dependencies for audio recording and background service functionality
+    implementation 'androidx.media:media:1.5.0' // For media playback and potentially useful for handling audio recording
+    implementation 'androidx.lifecycle:lifecycle-service:2.5.1' // For lifecycle-aware components, useful in services
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.5.1' // For lifecycle management in activities and services
+    // Consider using androidx.work:work-runtime for background tasks if applicable
+    implementation 'androidx.work:work-runtime:2.7.1'
 }

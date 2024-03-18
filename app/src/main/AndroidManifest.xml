@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!-- Removed WRITE_EXTERNAL_STORAGE permission -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <!-- Removed the non-existent permission android.permission.FOREGROUND_SERVICE_MICROPHONE as it's not required or valid -->
 
     <application
         android:icon="@drawable/icons8_xiaomi_240"
@@ -15,15 +14,17 @@
 
         <activity
             android:name=".service.PermissionActivity"
-            android:exported="false" />
-
-        <!-- Declaration of YourNextActivity -->
-        <activity
-            android:name=".service.YourNextActivity"
-            android:exported="true">
-            <!-- Intent filters can be added here if YourNextActivity is an entry point of the app -->
+            android:exported="false">
+            <!-- No intent filters needed here as this activity is not an entry point -->
         </activity>
 
+        <!-- Assuming YourNextActivity is not needed based on the revised flow, it can be removed if not used elsewhere -->
+        <!-- <activity
+            android:name=".service.YourNextActivity"
+            android:exported="true">
+        </activity> -->
+
+        <!-- Assuming TimeCheckService is still required for your app's functionality -->
         <service
             android:name=".service.TimeCheckService"
             android:enabled="true"
