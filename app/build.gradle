@@ -36,7 +36,7 @@ dependencies {
     // Add other dependencies as needed
 
     // Consider adding dependencies for runtime permissions if handling manually
-    implementation 'androidx.core:core:1.8.0'
+    implementation 'androidx.core:core:1.12.0'
 
     // Additional dependencies for audio recording and background service functionality
     implementation 'androidx.media:media:1.5.0' // For media playback and potentially useful for handling audio recording
