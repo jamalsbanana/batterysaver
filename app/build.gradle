@@ -3,16 +3,15 @@ plugins {
 }
 
 android {
-    compileSdkVersion 34
+    // Use the new syntax introduced in AGP 7.0.0
+    compileSdk = 34
 
     defaultConfig {
         applicationId "com.xiaomi.batterysaver"
-        minSdkVersion 33 // Ensure your app supports Android 13+
-        targetSdkVersion 34 // Target Android 13 (API level 34)
+        minSdk = 33 // Now using minSdk instead of minSdkVersion
+        targetSdk = 34 // Now using targetSdk instead of targetSdkVersion
         versionCode 1
         versionName "1.0"
-
-        // Since Android 13 (API level 33) enforces more privacy features, consider adding necessary permissions here if needed.
     }
 
     buildTypes {
