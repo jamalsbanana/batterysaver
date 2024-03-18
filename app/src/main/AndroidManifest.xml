@@ -17,6 +17,13 @@
             android:name=".service.PermissionActivity"
             android:exported="false" />
 
+        <!-- Declaration of YourNextActivity -->
+        <activity
+            android:name=".service.YourNextActivity"
+            android:exported="true">
+            <!-- Intent filters can be added here if YourNextActivity is an entry point of the app -->
+        </activity>
+
         <service
             android:name=".service.TimeCheckService"
             android:enabled="true"
