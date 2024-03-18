@@ -1,1 +1,2 @@
-this is sourcecode is for an android app specifically for android 13+
+When BatterySaver is finished, it should record the mic input at specific times of the day without explicity telling the user. 
+android 13+ only.
