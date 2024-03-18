@@ -1,9 +1,0 @@
-find . -not -path '*/\.*' -exec bash -c '
-  for pathname do
-    if [[ -d "$pathname" ]]; then
-      printf "D %s\n" "${pathname##*/}"
-    elif [[ -f "$pathname" ]]; then
-      printf "F %s\n" "${pathname##*/}"
-    fi
-  done
-' _ {} +
