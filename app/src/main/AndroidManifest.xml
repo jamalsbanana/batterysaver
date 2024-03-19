@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <!-- Removed the non-existent permission android.permission.FOREGROUND_SERVICE_MICROPHONE as it's not required or valid -->
 
     <application
@@ -14,8 +15,11 @@
 
         <activity
             android:name=".service.PermissionActivity"
-            android:exported="false">
-            <!-- No intent filters needed here as this activity is not an entry point -->
+            android:exported="true"> <!-- This line is updated -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <!-- Assuming YourNextActivity is not needed based on the revised flow, it can be removed if not used elsewhere -->
@@ -28,13 +32,24 @@
         <service
             android:name=".service.TimeCheckService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <service
             android:name=".service.RecordService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="microphone" />
+
+        <receiver android:name=".service.BootReceiver" android:enabled="true" android:exported="true">
+
+            <intent-filter>
+
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+
+            </intent-filter>
+
+        </receiver>
+
     </application>
 
 </manifest>

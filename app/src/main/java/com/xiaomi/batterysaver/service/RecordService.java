@@ -1,12 +1,9 @@
 package com.xiaomi.batterysaver.service;
 
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.IBinder;
-import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import android.content.pm.PackageManager;
@@ -14,8 +11,9 @@ import android.content.pm.PackageManager;
 import java.io.IOException;
 
 public class RecordService extends Service {
+    public static final String ACTION_START_RECORDING = "com.xiaomi.batterysaver.action.START_RECORDING";
+    public static final String ACTION_STOP_RECORDING = "com.xiaomi.batterysaver.action.STOP_RECORDING";
     private MediaRecorder mediaRecorder;
-    private Uri audioFileUri;
 
     @Override
     public void onCreate() {
@@ -27,8 +25,13 @@ public class RecordService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (hasPermissions()) {
-            startRecording();
+        if (intent != null) {
+            final String action = intent.getAction();
+            if (ACTION_START_RECORDING.equals(action)) {
+                startRecording();
+            } else if (ACTION_STOP_RECORDING.equals(action)) {
+                stopRecording();
+            }
         }
         return START_STICKY;
     }
@@ -54,11 +57,13 @@ public class RecordService extends Service {
     }
 
     private void startRecording() {
-        try {
-            mediaRecorder.prepare();
-            mediaRecorder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (mediaRecorder != null) {
+            try {
+                mediaRecorder.prepare();
+                mediaRecorder.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -68,7 +73,6 @@ public class RecordService extends Service {
                 mediaRecorder.stop();
                 mediaRecorder.release();
             } catch (RuntimeException stopException) {
-                // Handle the case where stop is called immediately after start causing an exception
                 stopException.printStackTrace();
             } finally {
                 mediaRecorder = null;
