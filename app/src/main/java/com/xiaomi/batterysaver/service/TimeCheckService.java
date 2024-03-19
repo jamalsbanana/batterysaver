@@ -81,7 +81,7 @@ public class TimeCheckService extends Service {
         nextStop.set(Calendar.SECOND, 0);
         nextStop.set(Calendar.MILLISECOND, 0);
         if (nextStop.before(Calendar.getInstance())) {
-            nextStop.add(Calendar.DATE, 1); // Ensure it's always in the future
+            nextStop.add(Calendar.DATE, 1); // Ensure it's always in the future!
         }
         return nextStop.getTimeInMillis();
     }

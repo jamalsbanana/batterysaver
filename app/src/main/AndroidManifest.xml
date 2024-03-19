@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.xiaomi.batterysaver">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <!-- Removed the non-existent permission android.permission.FOREGROUND_SERVICE_MICROPHONE as it's not required or valid -->
 
     <application
         android:icon="@drawable/icons8_xiaomi_240"
@@ -14,40 +14,32 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <activity
-            android:name=".service.PermissionActivity"
-            android:exported="true"> <!-- This line is updated -->
+            android:name="com.xiaomi.batterysaver.service.PermissionActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <!-- Assuming YourNextActivity is not needed based on the revised flow, it can be removed if not used elsewhere -->
-        <!-- <activity
-            android:name=".service.YourNextActivity"
-            android:exported="true">
-        </activity> -->
-
-        <!-- Assuming TimeCheckService is still required for your app's functionality -->
         <service
-            android:name=".service.TimeCheckService"
+            android:name="com.xiaomi.batterysaver.service.TimeCheckService"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name=".service.RecordService"
+            android:name="com.xiaomi.batterysaver.service.RecordService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="microphone" />
 
-        <receiver android:name=".service.BootReceiver" android:enabled="true" android:exported="true">
-
+        <receiver
+            android:name="com.xiaomi.batterysaver.service.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
-
             </intent-filter>
-
         </receiver>
 
     </application>
