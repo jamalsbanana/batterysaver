@@ -16,7 +16,7 @@ public class RecordService extends Service {
     public static final String ACTION_START_RECORDING = "com.xiaomi.batterysaver.action.START_RECORDING";
     public static final String ACTION_STOP_RECORDING = "com.xiaomi.batterysaver.action.STOP_RECORDING";
     private MediaRecorder mediaRecorder;
-    private final Handler mHandler = new Handler(Looper.getMainLooper()); // Updated to use Looper.getMainLooper()
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onCreate() {
