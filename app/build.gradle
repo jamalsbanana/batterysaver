@@ -21,9 +21,8 @@ android {
     }
 
     compileOptions {
-        // Update for Java 22 compatibility
-        sourceCompatibility JavaVersion.VERSION_22
-        targetCompatibility JavaVersion.VERSION_22
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
 
@@ -39,5 +38,4 @@ dependencies {
     implementation libs.lifecycleService
     implementation libs.lifecycleRuntime
     implementation libs.workRuntime
-    // Ensure all dependencies are compatible with Java 22
 }
