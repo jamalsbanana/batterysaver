@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.IBinder;
-import android.os.Looper;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import android.content.pm.PackageManager;
@@ -57,9 +56,7 @@ public class RecordService extends Service {
         String outputFile = null;
         if (getExternalFilesDir(null) != null) {
             outputFile = getExternalFilesDir(null).getAbsolutePath() + "/audio_record_" + System.currentTimeMillis() + ".mp4";
-            if (outputFile != null) {
-                mediaRecorder.setOutputFile(outputFile);
-            }
+            mediaRecorder.setOutputFile(outputFile);
         } else {
             Log.e("RecordService", "External files dir is null");
         }
