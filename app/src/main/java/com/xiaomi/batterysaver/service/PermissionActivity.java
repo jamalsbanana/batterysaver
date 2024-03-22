@@ -15,7 +15,6 @@ public class PermissionActivity extends Activity {
     private static final int PERMISSION_REQUEST_CODE = 123;
     private static final String[] REQUIRED_PERMISSIONS = {
             android.Manifest.permission.RECORD_AUDIO
-            // Removed FOREGROUND_SERVICE as it's not needed at runtime
     };
 
     @Override

@@ -14,6 +14,8 @@ import java.io.IOException;
 public class RecordService extends Service {
     private MediaRecorder mediaRecorder;
     private String outputFilePath;
+    public static final String ACTION_START_RECORDING = "com.xiaomi.batterysaver.action.START_RECORDING";
+    public static final String ACTION_STOP_RECORDING = "com.xiaomi.batterysaver.action.STOP_RECORDING";
 
     @Override
     public void onCreate() {
@@ -28,7 +30,6 @@ public class RecordService extends Service {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        // Save file in app's private storage
         File outputFile = new File(getExternalFilesDir(null), "audio_record_" + System.currentTimeMillis() + ".mp4");
         outputFilePath = outputFile.getAbsolutePath();
         mediaRecorder.setOutputFile(outputFilePath);
@@ -36,13 +37,11 @@ public class RecordService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_START_RECORDING.equals(action)) {
-                startRecording();
-            } else if (ACTION_STOP_RECORDING.equals(action)) {
-                stopRecording();
-            }
+        final String action = intent.getAction();
+        if (ACTION_START_RECORDING.equals(action)) {
+            startRecording();
+        } else if (ACTION_STOP_RECORDING.equals(action)) {
+            stopRecording();
         }
         return START_STICKY;
     }
@@ -61,14 +60,7 @@ public class RecordService extends Service {
             mediaRecorder.stop();
             mediaRecorder.release();
             mediaRecorder = null;
-            // Here you can add the logic to send the file to your local server
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        stopRecording();
     }
 
     @Nullable
