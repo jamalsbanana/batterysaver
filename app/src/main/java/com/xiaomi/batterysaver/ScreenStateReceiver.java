@@ -1,21 +1,19 @@
-package com.xiaomi.batterysaver;
+package com.xiaomi.batterysaver.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import com.xiaomi.batterysaver.service.RecordService;
+import android.util.Log;
 
 public class ScreenStateReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
-            Intent startIntent = new Intent(context, RecordService.class);
-            startIntent.setAction(RecordService.ACTION_START_RECORDING);
-            context.startService(startIntent);
+            Log.i("ScreenStateReceiver", "Screen off detected");
+            // Handle screen off event
         } else if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
-            Intent stopIntent = new Intent(context, RecordService.class);
-            stopIntent.setAction(RecordService.ACTION_STOP_RECORDING);
-            context.startService(stopIntent);
+            Log.i("ScreenStateReceiver", "Screen on detected");
+            // Handle screen on event
         }
     }
 }
