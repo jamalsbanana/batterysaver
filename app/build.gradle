@@ -3,13 +3,12 @@ plugins {
 }
 
 android {
-    // Use the new syntax introduced in AGP 7.0.0
     compileSdk = 34
 
     defaultConfig {
         applicationId "com.xiaomi.batterysaver"
-        minSdk = 33 // Now using minSdk instead of minSdkVersion
-        targetSdk = 34 // Now using targetSdk instead of targetSdkVersion
+        minSdk = 33
+        targetSdk = 34
         versionCode 1
         versionName "1.0"
     }
@@ -22,27 +21,26 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        // Update for Java 22 compatibility
+        sourceCompatibility JavaVersion.VERSION_22
+        targetCompatibility JavaVersion.VERSION_22
+    }
+
+    // If using Kotlin, update Kotlin options for Java 22 compatibility
+    kotlinOptions {
+        jvmTarget = "22"
     }
 }
 
-
-
 dependencies {
-    implementation libs.appcompat // Updated to use version catalog
-    implementation libs.material // Updated to use version catalog
-    implementation libs.activity // Updated to use version catalog
-    implementation libs.documentfile // Scoped storage compatibility, using version catalog
-    // Add other dependencies as needed
-
-    // Consider adding dependencies for runtime permissions if handling manually
-    implementation libs.core // Assuming 'core' is the alias for 'androidx.core:core'
-
-    // Additional dependencies for audio recording and background service functionality
-    implementation libs.media // Assuming 'media' is the alias for 'androidx.media:media'
-    implementation libs.lifecycleService // Assuming 'lifecycleService' is the alias for 'androidx.lifecycle:lifecycle-service'
-    implementation libs.lifecycleRuntime // Assuming 'lifecycleRuntime' is the alias for 'androidx.lifecycle:lifecycle-runtime'
-    // Consider using androidx.work:work-runtime for background tasks if applicable
-    implementation libs.workRuntime // Assuming 'workRuntime' is the alias for 'androidx.work:work-runtime'
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.documentfile
+    implementation libs.core
+    implementation libs.media
+    implementation libs.lifecycleService
+    implementation libs.lifecycleRuntime
+    implementation libs.workRuntime
+    // Ensure all dependencies are compatible with Java 22
 }
