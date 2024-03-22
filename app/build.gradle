@@ -26,10 +26,7 @@ android {
         targetCompatibility JavaVersion.VERSION_22
     }
 
-    // If using Kotlin, update Kotlin options for Java 22 compatibility
-    kotlinOptions {
-        jvmTarget = "22"
-    }
+
 }
 
 dependencies {
