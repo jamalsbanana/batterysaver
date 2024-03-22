@@ -3,12 +3,10 @@
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- Removed the non-existent permission android.permission.FOREGROUND_SERVICE_MICROPHONE -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-    <!-- Assuming WRITE_EXTERNAL_STORAGE is needed based on the initial discussion -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- Removed WRITE_EXTERNAL_STORAGE permission as it's deprecated for apps targeting Android 13+ -->
 
     <application
         android:icon="@drawable/icons8_xiaomi_240"
@@ -35,7 +33,9 @@
             android:name="com.xiaomi.batterysaver.service.RecordService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="microphone" />
+            android:foregroundServiceType="microphone">
+            <!-- Ensure you have the necessary permissions if your app's functionality requires any from the specific list provided earlier -->
+        </service>
 
         <receiver
             android:name="com.xiaomi.batterysaver.service.BootReceiver"
