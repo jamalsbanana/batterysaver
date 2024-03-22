@@ -62,7 +62,6 @@ public class PermissionActivity extends Activity {
     private void checkForScheduleExactAlarmPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (!Settings.canScheduleExactAlarms(this)) {
-                // Corrected to check for the right permission
                 Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
                 startActivity(intent);
             }
