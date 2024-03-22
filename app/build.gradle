@@ -27,6 +27,8 @@ android {
     }
 }
 
+
+
 dependencies {
     implementation libs.appcompat // Updated to use version catalog
     implementation libs.material // Updated to use version catalog
