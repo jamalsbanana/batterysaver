@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-    <!-- Removed WRITE_EXTERNAL_STORAGE permission as it's deprecated for apps targeting Android 13+ -->
 
     <application
         android:icon="@drawable/icons8_xiaomi_240"
@@ -23,11 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <service
-            android:name="com.xiaomi.batterysaver.service.TimeCheckService"
-            android:enabled="true"
-            android:exported="false" />
 
         <service
             android:name="com.xiaomi.batterysaver.service.RecordService"
