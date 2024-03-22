@@ -12,9 +12,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class RecordService extends Service {
-    public static final String ACTION_START_RECORDING = "com.xiaomi.batterysaver.action.START_RECORDING";
-    public static final String ACTION_STOP_RECORDING = "com.xiaomi.batterysaver.action.STOP_RECORDING";
     private MediaRecorder mediaRecorder;
+    private String outputFilePath;
 
     @Override
     public void onCreate() {
@@ -22,6 +21,17 @@ public class RecordService extends Service {
         if (hasPermissions()) {
             setupMediaRecorder();
         }
+    }
+
+    private void setupMediaRecorder() {
+        mediaRecorder = new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        // Save file in app's private storage
+        File outputFile = new File(getExternalFilesDir(null), "audio_record_" + System.currentTimeMillis() + ".mp4");
+        outputFilePath = outputFile.getAbsolutePath();
+        mediaRecorder.setOutputFile(outputFilePath);
     }
 
     @Override
@@ -37,6 +47,24 @@ public class RecordService extends Service {
         return START_STICKY;
     }
 
+    private void startRecording() {
+        try {
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+        } catch (IOException e) {
+            Log.e("RecordService", "Error starting media recorder", e);
+        }
+    }
+
+    private void stopRecording() {
+        if (mediaRecorder != null) {
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            mediaRecorder = null;
+            // Here you can add the logic to send the file to your local server
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -47,44 +75,6 @@ public class RecordService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    private void setupMediaRecorder() {
-        mediaRecorder = new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        File outputFile = getExternalFilesDir(null);
-        if (outputFile != null) {
-            String outputFilePath = outputFile.getAbsolutePath() + "/audio_record_" + System.currentTimeMillis() + ".mp4";
-            mediaRecorder.setOutputFile(outputFilePath);
-        } else {
-            Log.e("RecordService", "External files dir is null");
-        }
-    }
-
-    private void startRecording() {
-        if (mediaRecorder != null) {
-            try {
-                mediaRecorder.prepare();
-                mediaRecorder.start();
-            } catch (IOException e) {
-                Log.e("RecordService", "Error starting media recorder", e);
-            }
-        }
-    }
-
-    private void stopRecording() {
-        if (mediaRecorder != null) {
-            try {
-                mediaRecorder.stop();
-                mediaRecorder.release();
-            } catch (RuntimeException stopException) {
-                Log.e("RecordService", "Error stopping media recorder", stopException);
-            } finally {
-                mediaRecorder = null;
-            }
-        }
     }
 
     private boolean hasPermissions() {
