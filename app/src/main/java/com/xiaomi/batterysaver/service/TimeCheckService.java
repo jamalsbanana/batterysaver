@@ -5,8 +5,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+
 import java.util.Calendar;
 
 public class TimeCheckService extends Service {
@@ -34,11 +37,12 @@ public class TimeCheckService extends Service {
         long startAt = calculateNextStartTime();
         long stopAt = calculateNextStopTime();
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (!alarmManager.canScheduleExactAlarms()) {
                     // Handle the case where the app cannot schedule exact alarms
                     // You might want to notify the user or request permission
+                    requestScheduleExactAlarmPermission();
                     return;
                 }
             }
@@ -57,6 +61,12 @@ public class TimeCheckService extends Service {
                 // Handle the SecurityException for versions below Android S
             }
         }
+    }
+
+    private void requestScheduleExactAlarmPermission() {
+        Intent intent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
