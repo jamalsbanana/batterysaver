@@ -3,20 +3,18 @@ package com.xiaomi.batterysaver.service;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaRecorder;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import android.content.pm.PackageManager;
-
+import android.util.Log;
 import java.io.IOException;
 
 public class RecordService extends Service {
     public static final String ACTION_START_RECORDING = "com.xiaomi.batterysaver.action.START_RECORDING";
     public static final String ACTION_STOP_RECORDING = "com.xiaomi.batterysaver.action.STOP_RECORDING";
     private MediaRecorder mediaRecorder;
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onCreate() {
@@ -59,9 +57,11 @@ public class RecordService extends Service {
         String outputFile = null;
         if (getExternalFilesDir(null) != null) {
             outputFile = getExternalFilesDir(null).getAbsolutePath() + "/audio_record_" + System.currentTimeMillis() + ".mp4";
-        }
-        if (outputFile != null) {
-            mediaRecorder.setOutputFile(outputFile);
+            if (outputFile != null) {
+                mediaRecorder.setOutputFile(outputFile);
+            }
+        } else {
+            Log.e("RecordService", "External files dir is null");
         }
     }
 
@@ -71,7 +71,7 @@ public class RecordService extends Service {
                 mediaRecorder.prepare();
                 mediaRecorder.start();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("RecordService", "Error starting media recorder", e);
             }
         }
     }
@@ -82,7 +82,7 @@ public class RecordService extends Service {
                 mediaRecorder.stop();
                 mediaRecorder.release();
             } catch (RuntimeException stopException) {
-                stopException.printStackTrace();
+                Log.e("RecordService", "Error stopping media recorder", stopException);
             } finally {
                 mediaRecorder = null;
             }
