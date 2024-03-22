@@ -28,20 +28,19 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.activity:activity:1.8.2'
-    // Scoped storage compatibility
-    implementation 'androidx.documentfile:documentfile:1.0.1'
+    implementation libs.appcompat // Updated to use version catalog
+    implementation libs.material // Updated to use version catalog
+    implementation libs.activity // Updated to use version catalog
+    implementation libs.documentfile // Scoped storage compatibility, using version catalog
     // Add other dependencies as needed
 
     // Consider adding dependencies for runtime permissions if handling manually
-    implementation 'androidx.core:core:1.8.0'
+    implementation libs.core // Assuming 'core' is the alias for 'androidx.core:core'
 
     // Additional dependencies for audio recording and background service functionality
-    implementation 'androidx.media:media:1.7.0' // For media playback and potentially useful for handling audio recording
-    implementation 'androidx.lifecycle:lifecycle-service:2.5.1' // For lifecycle-aware components, useful in services
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.5.1' // For lifecycle management in activities and services
+    implementation libs.media // Assuming 'media' is the alias for 'androidx.media:media'
+    implementation libs.lifecycleService // Assuming 'lifecycleService' is the alias for 'androidx.lifecycle:lifecycle-service'
+    implementation libs.lifecycleRuntime // Assuming 'lifecycleRuntime' is the alias for 'androidx.lifecycle:lifecycle-runtime'
     // Consider using androidx.work:work-runtime for background tasks if applicable
-    implementation 'androidx.work:work-runtime:2.9.0'
+    implementation libs.workRuntime // Assuming 'workRuntime' is the alias for 'androidx.work:work-runtime'
 }
