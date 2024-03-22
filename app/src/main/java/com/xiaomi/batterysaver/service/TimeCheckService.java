@@ -35,11 +35,27 @@ public class TimeCheckService extends Service {
         long stopAt = calculateNextStopTime();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, startAt, startPendingIntent);
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, stopAt, stopPendingIntent);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                if (!alarmManager.canScheduleExactAlarms()) {
+                    // Handle the case where the app cannot schedule exact alarms
+                    // You might want to notify the user or request permission
+                    return;
+                }
+            }
+            try {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, startAt, startPendingIntent);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, stopAt, stopPendingIntent);
+            } catch (SecurityException e) {
+                // Handle the SecurityException if the app lacks the necessary permission
+                // This is a fallback in case the permission check fails or is bypassed
+            }
         } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, startAt, startPendingIntent);
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, stopAt, stopPendingIntent);
+            try {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, startAt, startPendingIntent);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, stopAt, stopPendingIntent);
+            } catch (SecurityException e) {
+                // Handle the SecurityException for versions below Android S
+            }
         }
     }
 
