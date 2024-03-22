@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import android.content.pm.PackageManager;
 import android.util.Log;
+import java.io.File;
 import java.io.IOException;
 
 public class RecordService extends Service {
@@ -53,10 +54,10 @@ public class RecordService extends Service {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        String outputFile = null;
-        if (getExternalFilesDir(null) != null) {
-            outputFile = getExternalFilesDir(null).getAbsolutePath() + "/audio_record_" + System.currentTimeMillis() + ".mp4";
-            mediaRecorder.setOutputFile(outputFile);
+        File outputFile = getExternalFilesDir(null);
+        if (outputFile != null) {
+            String outputFilePath = outputFile.getAbsolutePath() + "/audio_record_" + System.currentTimeMillis() + ".mp4";
+            mediaRecorder.setOutputFile(outputFilePath);
         } else {
             Log.e("RecordService", "External files dir is null");
         }
