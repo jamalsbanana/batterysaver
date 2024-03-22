@@ -63,9 +63,14 @@ public class PermissionActivity extends Activity {
             if (!Settings.canScheduleExactAlarms(this)) {
                 Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
                 startActivity(intent);
+            } else {
+                // Permission is granted, proceed with the service start
+                proceedToStartRecordingService();
             }
+        } else {
+            // For Android versions below S, proceed without checking for exact alarm scheduling
+            proceedToStartRecordingService();
         }
-        proceedToStartRecordingService();
     }
 
     private void proceedToStartRecordingService() {
