@@ -59,12 +59,14 @@ public class PermissionActivity extends Activity {
     }
 
     private void checkForScheduleExactAlarmPermission() {
-        if (!Settings.canScheduleExactAlarms(this)) {
-            Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
-            startActivity(intent);
-        } else {
-            // Permission is granted, proceed with the service start
-            proceedToStartRecordingService();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!Settings.canScheduleExactAlarms()) {
+                Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                startActivity(intent);
+            } else {
+                // Permission is granted, proceed with the service start
+                proceedToStartRecordingService();
+            }
         }
     }
 
