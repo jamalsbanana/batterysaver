@@ -14,7 +14,7 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import java.io.File;
 import java.io.IOException;
-import BatterySaver.R;
+import com.xiaomi.batterysaver.R; // Adjust the import based on your package name
 
 public class RecordService extends Service {
     private MediaRecorder mediaRecorder;
@@ -29,6 +29,7 @@ public class RecordService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "Service onCreate");
+        createNotificationChannel();
         if (hasPermissions()) {
             setupMediaRecorder();
         } else {
@@ -64,9 +65,9 @@ public class RecordService extends Service {
 
     private void startForegroundService() {
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.notification_title)) // Use string resource for title
-                .setContentText(getString(R.string.notification_content)) // Use string resource for content
-                .setSmallIcon(R.drawable.icons8_xiaomi_240) // Use the Xiaomi icon
+                .setContentTitle(getString(R.string.notification_title))
+                .setContentText(getString(R.string.notification_content))
+                .setSmallIcon(R.drawable.icons8_xiaomi_240) // Ensure you have this drawable resource
                 .build();
 
         startForeground(NOTIFICATION_ID, notification);
@@ -103,5 +104,17 @@ public class RecordService extends Service {
 
     private boolean hasPermissions() {
         return checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.notification_title);
+            String description = getString(R.string.notification_content);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }
