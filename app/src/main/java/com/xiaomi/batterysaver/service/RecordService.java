@@ -1,15 +1,20 @@
 package com.xiaomi.batterysaver.service;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.core.app.NotificationCompat;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import java.io.File;
 import java.io.IOException;
+import BatterySaver.R;
 
 public class RecordService extends Service {
     private MediaRecorder mediaRecorder;
@@ -17,6 +22,8 @@ public class RecordService extends Service {
     public static final String ACTION_START_RECORDING = "com.xiaomi.batterysaver.action.START_RECORDING";
     public static final String ACTION_STOP_RECORDING = "com.xiaomi.batterysaver.action.STOP_RECORDING";
     private static final String TAG = "RecordService";
+    private static final String CHANNEL_ID = "RecordServiceChannel";
+    private static final int NOTIFICATION_ID = 1;
 
     @Override
     public void onCreate() {
@@ -46,11 +53,23 @@ public class RecordService extends Service {
         final String action = intent.getAction();
         Log.d(TAG, "onStartCommand received with action: " + action);
         if (ACTION_START_RECORDING.equals(action)) {
+            startForegroundService();
             startRecording();
         } else if (ACTION_STOP_RECORDING.equals(action)) {
             stopRecording();
+            stopForeground(true);
         }
         return START_STICKY;
+    }
+
+    private void startForegroundService() {
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(getString(R.string.notification_title)) // Use string resource for title
+                .setContentText(getString(R.string.notification_content)) // Use string resource for content
+                .setSmallIcon(R.drawable.icons8_xiaomi_240) // Use the Xiaomi icon
+                .build();
+
+        startForeground(NOTIFICATION_ID, notification);
     }
 
     private void startRecording() {
@@ -79,13 +98,10 @@ public class RecordService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind called");
         return null;
     }
 
     private boolean hasPermissions() {
-        boolean hasPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
-        Log.d(TAG, "Checking permissions: " + (hasPermission ? "Granted" : "Denied"));
-        return hasPermission;
+        return checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
     }
 }

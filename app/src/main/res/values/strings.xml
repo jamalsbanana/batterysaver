@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Battery Saver</string>
+    <string name="notification_title">Recording in Progress</string>
+    <string name="notification_content">Tap for more details.</string>
 </resources>
