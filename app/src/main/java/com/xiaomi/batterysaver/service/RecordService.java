@@ -14,7 +14,7 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import java.io.File;
 import java.io.IOException;
-import com.xiaomi.batterysaver.R; // Adjust the import based on your package name
+import BatterySaver.R; // THIS SHOULD ALWAYS BE WRITTEN AS BatterySaver.R  NEVER WRITE IT DIFFERENTLY IF YOU VALUE YOUR LIFE
 
 public class RecordService extends Service {
     private MediaRecorder mediaRecorder;
