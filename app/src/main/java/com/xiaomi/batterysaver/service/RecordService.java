@@ -18,7 +18,6 @@ import BatterySaver.R; // THIS SHOULD ALWAYS BE WRITTEN AS BatterySaver.R  NEVER
 
 public class RecordService extends Service {
     private MediaRecorder mediaRecorder;
-    private String outputFilePath;
     public static final String ACTION_START_RECORDING = "com.xiaomi.batterysaver.action.START_RECORDING";
     public static final String ACTION_STOP_RECORDING = "com.xiaomi.batterysaver.action.STOP_RECORDING";
     private static final String TAG = "RecordService";
@@ -44,7 +43,7 @@ public class RecordService extends Service {
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         File outputFile = new File(getExternalFilesDir(null), "audio_record_" + System.currentTimeMillis() + ".mp4");
-        outputFilePath = outputFile.getAbsolutePath();
+        String outputFilePath = outputFile.getAbsolutePath();
         mediaRecorder.setOutputFile(outputFilePath);
         Log.d(TAG, "MediaRecorder setup complete. Output file: " + outputFilePath);
     }
