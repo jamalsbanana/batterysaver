@@ -6,7 +6,7 @@ documentfile = "1.0.1"
 core = "1.12.0"
 media = "1.7.0"
 lifecycleService = "2.7.0"
-lifecycleRuntime = "2.7.0"
+lifecycleRuntime = "2.8.0"
 workRuntime = "2.9.0"
 
 [libraries]
